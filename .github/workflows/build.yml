@@ -20,9 +20,11 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: x86_64-windows-gnu
+          - name: x86_64-w64-windows-gnu
             os: windows-latest
             shell: msys2 {0}
+            # from https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-clang/PKGBUILD
+            more-opts: -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib -DLLVM_HOST_TRIPLE="x86_64-w64-windows-gnu -DLLD_DEFAULT_LD_LLD_IS_MINGW=ON
       # complete all jobs
       fail-fast: false
     env:
@@ -49,7 +51,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: clang64
-          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git cmake mingw-w64-clang-x86_64-ninja tar zstd
+          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git cmake ninja tar zstd
       - name: Cache
         uses: actions/cache@v2
         with:
@@ -74,7 +76,7 @@ jobs:
             `# https://boxbase.org/entries/2018/jun/11/minimal-llvm-build/`\
             -DLLVM_BUILD_TOOLS=OFF -DLLVM_TARGETS_TO_BUILD='AArch64;WebAssembly;X86'\
             `# https://libcxx.llvm.org/BuildingLibcxx.html`\
-            -DCLANG_DEFAULT_LINKER=lld -DCLANG_DEFAULT_RTLIB=compiler-rt -DLIBCXX_USE_COMPILER_RT=ON -DLIBCXXABI_USE_COMPILER_RT=ON -DLIBCXXABI_USE_LLVM_UNWINDER=ON -DLIBUNWIND_USE_COMPILER_RT=ON\
+            -DCLANG_DEFAULT_LINKER=lld -DCLANG_DEFAULT_RTLIB=compiler-rt -DLIBCXX_USE_COMPILER_RT=ON -DLIBCXXABI_USE_COMPILER_RT=ON -DLIBCXXABI_USE_LLVM_UNWINDER=ON -DLIBUNWIND_USE_COMPILER_RT=ON -DCOMPILER_RT_USE_BUILTINS_LIBRARY=ON\
             `# https://llvm.org/docs/BuildingADistribution.html`\
             -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON\
             `# hide libc++ symbols in libleanshared`\
