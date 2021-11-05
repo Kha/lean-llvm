@@ -23,8 +23,8 @@ jobs:
           - name: x86_64-w64-windows-gnu
             os: windows-latest
             shell: msys2 {0}
-            # from https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-clang/PKGBUILD
-            more-opts: -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib -DLLVM_HOST_TRIPLE=x86_64-w64-windows-gnu -DLLD_DEFAULT_LD_LLD_IS_MINGW=ON -G "Unix Makefiles"
+            # from https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-clang/PKGBUILD + https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-libc%2B%2B/PKGBUILD
+            more-opts: -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib -DLLVM_HOST_TRIPLE=x86_64-w64-windows-gnu -DLLD_DEFAULT_LD_LLD_IS_MINGW=ON -G "Unix Makefiles" -DLIBCXX_HAS_WIN32_THREAD_API=ON -DLIBCXXABI_HAS_WIN32_THREAD_API=ON
       # complete all jobs
       fail-fast: false
     env:
