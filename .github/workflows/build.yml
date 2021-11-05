@@ -24,7 +24,7 @@ jobs:
             os: windows-latest
             shell: msys2 {0}
             # from https://github.com/msys2/MINGW-packages/blob/master/mingw-w64-clang/PKGBUILD
-            more-opts: -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib -DLLVM_HOST_TRIPLE=x86_64-w64-windows-gnu -DLLD_DEFAULT_LD_LLD_IS_MINGW=ON
+            more-opts: -DCMAKE_SYSTEM_IGNORE_PATH=/usr/lib -DLLVM_HOST_TRIPLE=x86_64-w64-windows-gnu -DLLD_DEFAULT_LD_LLD_IS_MINGW=ON -G "Unix Makefiles"
       # complete all jobs
       fail-fast: false
     env:
@@ -51,7 +51,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: clang64
-          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git cmake ninja tar zstd
+          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git mingw-w64-clang-x86_64-cmake make tar zstd
       - name: Cache
         uses: actions/cache@v2
         with:
