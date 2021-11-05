@@ -81,9 +81,8 @@ jobs:
             -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON\
             `# hide libc++ symbols in libleanshared`\
             -DLIBCXX_HERMETIC_STATIC_LIBRARY=ON -DLIBCXXABI_HERMETIC_STATIC_LIBRARY=ON\
-            -DCMAKE_EXE_LINKER_FLAGS=-rtlib=compiler-rt -DCMAKE_SHARED_LINKER_FLAGS=-rtlib=compiler-rt\
             ${{ matrix.more-opts }}
-          cmake --build .
+          make -j2 VERBOSE=1 || exit
           cmake --install .
           popd
           tar cf lean-llvm-${{ matrix.name }}.tar.zst --use-compress-program="zstd -19" lean-llvm/
