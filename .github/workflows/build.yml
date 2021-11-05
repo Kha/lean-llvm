@@ -49,7 +49,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: clang64
-          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git mingw-w64-clang-x86_64-cmake mingw-w64-clang-x86_64-z3 ninja mingw-w64-clang-x86_64-pkg-config mingw-w64-clang-x86_64-python-sphinx mingw-w64-clang-x86_64-python tar base-devel
+          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git cmake ninja tar zstd
       - name: Cache
         uses: actions/cache@v2
         with:
