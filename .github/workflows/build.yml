@@ -3,7 +3,7 @@ name: Build LLVM
 on:
   push:
     branches:
-      - main
+      - '*'
     tags:
       - '*'
   pull_request:
@@ -20,13 +20,6 @@ jobs:
     strategy:
       matrix:
         include:
-          - name: x86_64-linux-gnu
-            os: ubuntu-18.04
-            more-opts: -DCMAKE_C_COMPILER=clang-13 -DCMAKE_CXX_COMPILER=clang++-13
-          - name: x86_64-apple-darwin
-            os: macos-latest
-            # macOS says: ld64.lld: warning: Option `-reexported_symbols_list' is not yet implemented. Stay tuned...
-            more-opts: -DLLVM_USE_LINKER=ld
           - name: x86_64-windows-gnu
             os: windows-latest
             shell: msys2 {0}
@@ -55,7 +48,8 @@ jobs:
         if: matrix.os == 'windows-latest'
         uses: msys2/setup-msys2@v2
         with:
-          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git mingw-w64-clang-x86_64-cmake mingw-w64-clang-x86_64-z3 mingw-w64-clang-x86_64-ninja mingw-w64-clang-x86_64-pkg-config mingw-w64-clang-x86_64-python-sphinx mingw-w64-clang-x86_64-python tar base-devel
+          msystem: clang64
+          install: mingw-w64-clang-x86_64-clang mingw-w64-clang-x86_64-ccache git mingw-w64-clang-x86_64-cmake mingw-w64-clang-x86_64-z3 ninja mingw-w64-clang-x86_64-pkg-config mingw-w64-clang-x86_64-python-sphinx mingw-w64-clang-x86_64-python tar base-devel
       - name: Cache
         uses: actions/cache@v2
         with:
@@ -65,7 +59,6 @@ jobs:
           restore-keys: |
             ${{ matrix.name }}-build
       - name: Build
-        if: matrix.os != 'windows-latest'
         run: |
           git clone -q --depth 1 -b llvmorg-13.0.0 --recursive https://github.com/llvm/llvm-project
           pushd llvm-project
@@ -92,12 +85,6 @@ jobs:
           cmake --install .
           popd
           tar cf lean-llvm-${{ matrix.name }}.tar.zst --use-compress-program="zstd -19" lean-llvm/
-      - name: Build
-        if: matrix.os == 'windows-latest'
-        run: |
-          git clone https://github.com/Kha/MINGW-packages
-          cd MINGW-packages/mingw-w64-clang
-          MINGW_ARCH=clang64 makepkg-mingw -sCLf --skippgpcheck
       - name: CCache stats
         run: ccache -s
       - uses: actions/upload-artifact@v2
