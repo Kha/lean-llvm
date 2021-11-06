@@ -22,11 +22,11 @@ jobs:
         include:
           - name: x86_64-linux-gnu
             os: ubuntu-18.04
-            more-opts: -DCMAKE_C_COMPILER=clang-13 -DCMAKE_CXX_COMPILER=clang++-13
+            more-opts: -DCMAKE_C_COMPILER=clang-13 -DCMAKE_CXX_COMPILER=clang++-13 -DCMAKE_INSTALL_RPATH='$ORIGIN/../lib'
           - name: x86_64-apple-darwin
             os: macos-latest
-            # macOS says: ld64.lld: warning: Option `-reexported_symbols_list' is not yet implemented. Stay tuned...
-            more-opts: -DLLVM_USE_LINKER=ld
+            # ld64.lld: warning: Option `-reexported_symbols_list' is not yet implemented. Stay tuned...
+            more-opts: -DLLVM_USE_LINKER=ld -DCMAKE_INSTALL_RPATH='@loader_path/../lib' -DCMAKE_INSTALL_NAME_DIR='@rpath'
           #- name: x86_64-windows-gnu
           #  os: windows-latest
           #  shell: msys2 {0}
