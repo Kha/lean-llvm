@@ -27,9 +27,9 @@ jobs:
             os: macos-latest
             # macOS says: ld64.lld: warning: Option `-reexported_symbols_list' is not yet implemented. Stay tuned...
             more-opts: -DLLVM_USE_LINKER=ld
-          - name: x86_64-windows-gnu
-            os: windows-latest
-            shell: msys2 {0}
+          #- name: x86_64-windows-gnu
+          #  os: windows-latest
+          #  shell: msys2 {0}
       # complete all jobs
       fail-fast: false
     env:
@@ -86,7 +86,8 @@ jobs:
             -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON\
             `# hide libc++ symbols in libleanshared`\
             -DLIBCXX_HERMETIC_STATIC_LIBRARY=ON -DLIBCXXABI_HERMETIC_STATIC_LIBRARY=ON\
-            -DCMAKE_EXE_LINKER_FLAGS=-rtlib=compiler-rt -DCMAKE_SHARED_LINKER_FLAGS=-rtlib=compiler-rt\
+            -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF \
+            -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXX_ENABLE_STATIC=ON -DLLVM_STATIC_LINK_CXX_STDLIB=ON\
             ${{ matrix.more-opts }}
           cmake --build .
           cmake --install .
