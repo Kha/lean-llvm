@@ -70,7 +70,7 @@ jobs:
           fi
           mkdir build
           cd build
-          cmake -G Ninja ../llvm -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=${{ github.workspace }}/lean-llvm -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DLLVM_USE_LINKER=lld\
+          cmake -G Ninja ../llvm -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$PWD/../../lean-llvm -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++ -DLLVM_USE_LINKER=lld\
             -DLLVM_ENABLE_PROJECTS="clang;lld;compiler-rt;libcxx;libcxxabi;libunwind" -DLLVM_LINK_LLVM_DYLIB=ON -DLLVM_CCACHE_BUILD=ON\
             -DLLVM_ENABLE_LIBXML2=OFF -DLLVM_ENABLE_TERMINFO=OFF -DLLVM_ENABLE_LIBCXX=ON\
             `# https://boxbase.org/entries/2018/jun/11/minimal-llvm-build/`\
@@ -81,12 +81,10 @@ jobs:
             -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON\
             `# hide libc++ symbols in libleanshared`\
             -DLIBCXX_HERMETIC_STATIC_LIBRARY=ON -DLIBCXXABI_HERMETIC_STATIC_LIBRARY=ON\
-            -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF \
-            -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXX_ENABLE_STATIC=ON\
-            -DLIBCXXABI_ENABLE_SHARED=OFF -DLIBCXXABI_ENABLE_STATIC=ON -DLLVM_STATIC_LINK_CXX_STDLIB=ON\
+            -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF\
+            -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXXABI_ENABLE_SHARED=OFF -DLLVM_STATIC_LINK_CXX_STDLIB=ON\
             ${{ matrix.more-opts }}
-          make -j2 VERBOSE=1 || exit
-          cmake --install .
+          make install -j$(nproc)
           popd
           tar cf lean-llvm-${{ matrix.name }}.tar.zst --use-compress-program="zstd -19" lean-llvm/
       - name: CCache stats
