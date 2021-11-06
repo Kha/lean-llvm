@@ -86,6 +86,7 @@ jobs:
             -DLLVM_INSTALL_TOOLCHAIN_ONLY=ON\
             `# hide libc++ symbols in libleanshared`\
             -DLIBCXX_HERMETIC_STATIC_LIBRARY=ON -DLIBCXXABI_HERMETIC_STATIC_LIBRARY=ON\
+            -DCMAKE_BUILD_WITH_INSTALL_RPATH=ON\
             ${{ matrix.more-opts }}
           cmake --build .
           cmake --install .
