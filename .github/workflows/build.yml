@@ -82,7 +82,8 @@ jobs:
             `# hide libc++ symbols in libleanshared`\
             -DLIBCXX_HERMETIC_STATIC_LIBRARY=ON -DLIBCXXABI_HERMETIC_STATIC_LIBRARY=ON\
             -DLIBCXX_ENABLE_EXPERIMENTAL_LIBRARY=OFF \
-            -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXX_ENABLE_STATIC=ON -DLLVM_STATIC_LINK_CXX_STDLIB=ON\
+            -DLIBCXX_ENABLE_SHARED=OFF -DLIBCXX_ENABLE_STATIC=ON\
+            -DLIBCXXABI_ENABLE_SHARED=OFF -DLIBCXXABI_ENABLE_STATIC=ON -DLLVM_STATIC_LINK_CXX_STDLIB=ON\
             ${{ matrix.more-opts }}
           make -j2 VERBOSE=1 || exit
           cmake --install .
